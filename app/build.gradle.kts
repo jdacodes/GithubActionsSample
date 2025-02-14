@@ -1,3 +1,4 @@
+import com.google.firebase.appdistribution.gradle.firebaseAppDistribution
 import org.jlleitschuh.gradle.ktlint.reporter.ReporterType
 
 plugins {
@@ -5,6 +6,8 @@ plugins {
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.ktlint)
+    alias(libs.plugins.google.firebase.appdistribution)
+    alias(libs.plugins.google.gms.google.services)
 }
 
 android {
@@ -22,12 +25,24 @@ android {
     }
 
     buildTypes {
+        debug {
+            group = "QA"
+            isMinifyEnabled = false
+            firebaseAppDistribution {
+                releaseNotesFile = "release_notes.txt"
+                testers = "jda.codes@gmail.com"
+            }
+        }
         release {
             isMinifyEnabled = false
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro",
             )
+            firebaseAppDistribution {
+                releaseNotesFile = "release_notes.txt"
+                testers = "jda.codes@gmail.com"
+            }
         }
     }
     compileOptions {
