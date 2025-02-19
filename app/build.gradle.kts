@@ -8,6 +8,7 @@ plugins {
     alias(libs.plugins.ktlint)
     alias(libs.plugins.google.firebase.appdistribution)
     alias(libs.plugins.google.gms.google.services)
+    alias(libs.plugins.detekt)
 }
 
 android {
@@ -55,14 +56,15 @@ android {
     buildFeatures {
         compose = true
     }
-
+    tasks.getByPath("preBuild").dependsOn("ktlintFormat")
     ktlint {
         android = true // Enable Android-specific linting rules
-        ignoreFailures = true // Fail the build if KtLint finds any issues
-        disabledRules.set(listOf("final-newline", "no-wildcard-imports", "max-line-length")) // Specify any rules to ignore
+        ignoreFailures = false // Fail the build if KtLint finds any issues
+
         reporters {
             reporter(ReporterType.PLAIN) // Output KtLint results in plain text format
             reporter(ReporterType.HTML) // Output KtLint results in HTML format
+            reporter(ReporterType.CHECKSTYLE) // Output KtLint results in Checkstyle/xml format
         }
     }
 
